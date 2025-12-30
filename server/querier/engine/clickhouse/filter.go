@@ -618,7 +618,8 @@ func (t *WhereTag) Trans(expr sqlparser.Expr, w *Where, e *CHEngine) (view.Node,
 					return &view.Expr{Value: filter}, nil
 				}
 			case "pod_ns_map", "pod_group_map", "pod_service_map", "pod_map", "chost_map", "gprocess_map", "pod_ingress_map", "pod_node_map", "subnet_map", "biz_service_map":
-				checkTag := strings.TrimSuffix(t.Tag, "_id")
+				checkTag := strings.Trim(t.Tag, "`")
+				checkTag = strings.TrimSuffix(checkTag, "_id")
 				if slices.Contains(chCommon.SHOW_TAG_VALUE_MAP[table], checkTag) {
 					if strings.HasSuffix(t.Tag, "_id") {
 						if checkTag == strings.TrimSuffix(table, "_map") || checkTag == common.CHOST_HOSTNAME || checkTag == common.CHOST_IP || checkTag == common.BIZ_SERVICE_GROUP {
@@ -709,7 +710,7 @@ func (t *WhereTag) Trans(expr sqlparser.Expr, w *Where, e *CHEngine) (view.Node,
 									}
 									transTag := t.Tag
 									if t.Tag == common.BIZ_SERVICE_GROUP {
-										transTag = "biz_service_group"
+										transTag = "service_group_name"
 									}
 									switch strings.ToLower(op) {
 									case "match":
